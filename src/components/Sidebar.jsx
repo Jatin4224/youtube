@@ -31,6 +31,17 @@ const Sidebar = () => {
         <li>Gaming</li>
         <li>Movies</li>
       </ul>
+      <h1 className="font-bold pt-5">Explore</h1>
+      <ul>
+        <li>Music</li>
+        <li>Sports</li>
+        <li>Gaming</li>
+        <li>Movies</li>
+        <li>Learning</li>
+        <li>Podcasts</li>
+        <li>Fasion & Bauty</li>
+        <li>News</li>
+      </ul>
     </div>
   );
 };
