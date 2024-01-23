@@ -23,15 +23,16 @@ const VideoCard = ({ info }) => {
           alt={title}
           className="w-full h-48 object-cover rounded-t-md"
         />
-        <span className="absolute top-2 right-2 bg-black text-white text-xs px-2 py-1 rounded">
-          {statistics?.viewCount} views
-        </span>
       </div>
       <div className="p-4">
         <h2 className="text-sm md:text-base font-semibold line-clamp-2">
           {title}
         </h2>
+
         <p className="text-gray-600 text-xs mb-2">{channelTitle}</p>
+        <span className=" text-black text-xs rounded">
+          {statistics?.viewCount} views
+        </span>
       </div>
     </div>
   );
