@@ -40,3 +40,10 @@ iph:
 new Map()
 
 -n level nesting
+
+-building live chat also like infinite scroll
+live chat >> infinite scroll >>> pagination
+
+handling live data:
+-1)using websockets:It enables real-time, event-driven communication between a client and a server
+-2)api polling:API polling is where the client sends requests to an endpoint repeatedly.
