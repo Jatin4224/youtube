@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import { cacheResults } from "../utils/searchSlice";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const searchCache = useSelector((store) => store.search);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const timer = setTimeout(() => getSearchSuggestions(), 200);
+    const timer = setTimeout(() => {
+      if (searchCache[searchQuery]) {
+        setSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchSuggestions();
+      }
+    }, 200);
     return () => {
       clearTimeout(timer);
     };
@@ -18,9 +29,14 @@ const Head = () => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
     setSuggestions(json[1]);
-  };
 
-  const dispatch = useDispatch();
+    //update cache
+    dispatch(
+      cacheResults({
+        [searchQuery]: json[1],
+      })
+    );
+  };
 
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
@@ -44,26 +60,32 @@ const Head = () => {
         </div>
       </div>
       <div className="col-span-8 flex items-center">
-        <div></div>
         <input
           className=" px-5 py-2 w-full px-4 py-2 border border-gray-300 rounded-l-full p-2"
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setShowSuggestions(false)}
         />
         <button className=" border border-gray-400 p-2 mr-2 rounded-r-full bg-gray-100">
           🔍
         </button>
         <div>
-          <div className="fixed bg-white py-2 px-2 w-[37rem] shadow-lg rounded-lg border border-gray-100">
-            <ul>
-              {suggestions.map((s) => (
-                <li key={s} className=" shadow-sm py-2 px-3 hover:bg-gray-100">
-                  🔍{s}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {showSuggestions && (
+            <div className="fixed bg-white py-2 px-2 w-[37rem] shadow-lg rounded-lg border border-gray-100">
+              <ul>
+                {suggestions.map((s) => (
+                  <li
+                    key={s}
+                    className=" shadow-sm py-2 px-3 hover:bg-gray-100"
+                  >
+                    🔍{s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex items-center justify-end col-span-2">
@@ -74,7 +96,6 @@ const Head = () => {
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0Wza0WER4F60dcEv5rpVcquvAeDGymlpzONQngivrkg&s"
         />
       </div>
-      <div></div>
     </div>
   );
 };

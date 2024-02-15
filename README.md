@@ -24,3 +24,17 @@ key- ip
 -render the component
 -useEffect()
 -start the timer -> make api call after 200ms
+
+cache:
+time complexity to search in array = O(n)
+time complexity to search in array = O(1)
+
+array.indexOf()
+
+{
+i:
+ip:
+iph:
+}
+
+new Map()
