@@ -5,16 +5,19 @@ import { YOUTUBE_SEARCH_API } from "../utils/constants";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+
   useEffect(() => {
     const timer = setTimeout(() => getSearchSuggestions(), 200);
     return () => {
       clearTimeout(timer);
     };
   }, [searchQuery]);
+
   const getSearchSuggestions = async () => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
-    console.log(json);
+    setSuggestions(json[1]);
   };
 
   const dispatch = useDispatch();
@@ -41,8 +44,9 @@ const Head = () => {
         </div>
       </div>
       <div className="col-span-8 flex items-center">
+        <div></div>
         <input
-          className="w-full px-4 py-2 border border-gray-300 rounded-l-full p-2"
+          className=" px-5 py-2 w-full px-4 py-2 border border-gray-300 rounded-l-full p-2"
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -50,6 +54,17 @@ const Head = () => {
         <button className=" border border-gray-400 p-2 mr-2 rounded-r-full bg-gray-100">
           🔍
         </button>
+        <div>
+          <div className="fixed bg-white py-2 px-2 w-[37rem] shadow-lg rounded-lg border border-gray-100">
+            <ul>
+              {suggestions.map((s) => (
+                <li key={s} className=" shadow-sm py-2 px-3 hover:bg-gray-100">
+                  🔍{s}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
       <div className="flex items-center justify-end col-span-2">
         <button className="mr-4">Sign In</button>
@@ -59,6 +74,7 @@ const Head = () => {
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0Wza0WER4F60dcEv5rpVcquvAeDGymlpzONQngivrkg&s"
         />
       </div>
+      <div></div>
     </div>
   );
 };
